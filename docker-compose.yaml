@@ -1,0 +1,40 @@
+version: '3.9'
+
+services:
+  database:
+    image: postgres:17
+    container_name: xozmag-database
+    ports:
+      - "5454:5432"
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: xozmag_db
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - xozmag-network
+
+  app:
+    build:
+      context: .
+    container_name: xozmag-backend
+    ports:
+      - "8000:8080"
+    environment:
+      DB_HOST: database
+      DB_PORT: "5454"
+      DB_USER: postgres
+      DB_PASSWORD: postgres
+      DB_NAME: xozmag_db
+    depends_on:
+      - database
+    networks:
+      - xozmag-network
+
+volumes:
+  postgres_data:
+
+networks:
+  xozmag-network:
+    driver: bridge

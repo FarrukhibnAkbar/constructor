@@ -54,19 +54,21 @@ func (ac *adminController) ExecuteAPI(cxt context.Context, apiName string, metho
 
 		switch v.QueryType {
 		case constants.SELECT_LIST:
-			value = []map[string]interface{}{} // Ro‘yxat bo‘lishi mumkin
-			err := ac.storage.Admin().SelectList(cxt, v, nil, &value)
+			var result []map[string]interface{}
+			err := ac.storage.Admin().SelectList(cxt, v, nil, &result)
 			if err != nil {
 				fmt.Println("Error:", err)
 				return nil, err
 			}
+			value = result
 		case constants.SELECT_ONE:
-			value = map[string]interface{}{} // Bitta object bo‘lishi mumkin
-			err := ac.storage.Admin().SelectOne(cxt, v, nil, &value)
+			result := make(map[string]interface{})
+			err := ac.storage.Admin().SelectOne(cxt, v, nil, &result)
 			if err != nil {
 				fmt.Println("Error:", err)
 				return nil, err
 			}
+			value = result
 		case constants.INSERT_ITEM:
 			err := ac.storage.Admin().InsertItem(cxt, v)
 			if err != nil {
